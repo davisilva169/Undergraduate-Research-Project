@@ -1,0 +1,97 @@
+'''
+Código para plotar as distribuições geradas por um modelo nulo. As simulações estão centradas na análise do comportamento esperado para a distribuição de um máximo entre n objetos secundários gerados. 
+Tomando um todo (100%), quão mais se espera que, ao particionarmos por um processo aleatório uniforme esse todo, a maior das frações geradas tome do percentual total?
+Para estudar o fenômeno, modelo o sistema a partir de um objeto genérico: um palito (que, no contexto da pesquisa referente ao efeito da partícula líder, pode tomar-se como a energia total do primário) de tamanho 1.
+A ideia é simples: a partir de um processo aleatório que parte de uma distribuição uniforme, gerar n-1 pontos de quebra dentro desse palito de tamanho 1 (n-1 números aleatórios entre 0 e 1) par gerar n frações do palito.
+Destas n frações, guardamos o valor da maior delas. 
+Repetido o processo milhares de vezes, conseguimos plotar a distribuição de máximos gerados a partir de uma distribuição uniforme.
+'''
+
+# Bibliotecas
+import matplotlib.pyplot as plt
+import numpy as np
+import random
+from math import factorial
+
+# Entrada de Dados
+R = int(input("Quantas vezes deseja rodar o programa? "))
+N = int(input("Quantos pedaços deseja dividir o palito? "))
+x = float(input("Qual valor usar de parâmetro? ")) # Valor para comparar a probabilidade terórica P(A <= x) com o gerado pelo modelo numérico
+
+# Funções para comparar resultado experimental e teórico
+def valor_medio(h: float, n: int) -> float:
+    return h / n
+
+# Calculando H - Números harmônicos que surgem da teoria que descreve a disrtribuição de probabilidade do máximo valor que pode ser realizado em um conjunto de variáveis aleatórias estatisticamente independentes entre si (note que se trata exatamente do nosso modelo). São as chamadas estatísticas de ordem (order statistics). Este resultado, no entanto, foge do escopo da pesquisa, embora útil para averiguar a veracidade do modelo nulo.
+H = sum(1 / k for k in range(1, N + 1))
+
+# Lista para armazenar os maiores tamanhos em cada iteração
+lista_maiores = []
+contagem = 0
+
+# Realizando os cortes e pegando os maiores tamanhos
+for _ in range(R):
+    # Gerando cortes aleatórios e ordenando
+    lista_cortes = sorted(random.random() for _ in range(N - 1))
+    
+    # Calculando os tamanhos dos pedaços
+    lista_tamanhos = [lista_cortes[0]] + \
+                     [lista_cortes[i] - lista_cortes[i - 1] for i in range(1, len(lista_cortes))] + \
+                     [1 - lista_cortes[-1]]
+
+    # Encontrando o maior tamanho
+    maior = max(lista_tamanhos)
+    lista_maiores.append(maior)
+
+    # Contando quantas vezes o maior tamanho é menor que x
+    if maior < x:
+        contagem += 1
+
+# Probabilidades calculadas
+a = valor_medio(H, N)
+print(f"O valor médio teórico é: {a}")
+
+# Probabilidade <= x experimental
+probabilidade_menor_que_x = contagem / R
+
+# Probabilidade <= x teórica
+def Prob_Max(n: int, x: float) -> float:
+    ListaSoma = [
+        (factorial(n) / (factorial(i) * factorial(n - i))) * 
+        ((-1) ** (i - 1)) * 
+        ((1 - i * x) ** (n - 1))
+        for i in range(1, n + 1) if (1 - (i * x)) > 0
+    ]
+    return sum(ListaSoma)
+
+prob = Prob_Max(N, x)
+
+# Calcular o histograma com densidade
+counts, bins = np.histogram(lista_maiores, bins=100, density=True)
+
+# Calcular a largura de cada bin
+bin_width = bins[1] - bins[0]
+
+# Calcular a densidade de probabilidade para cada bin
+density = counts * bin_width
+
+# Calcular o centro de cada bin
+bin_centers = (bins[:-1] + bins[1:]) / 2
+
+# Calcular o valor médio usando os centros dos bins e a densidade
+media_histograma = np.sum(bin_centers * density)
+
+# Plotar o histograma
+plt.bar(bins[:-1], density, width=bin_width, edgecolor='black', align='edge')
+plt.axvline(x, color='r', linestyle='--', label=f'x = {x}')
+plt.axvline(media_histograma, color='g', linestyle='-', label=f'Média = {media_histograma:.4f}')
+plt.xlabel('Tamanho do Maior Pedaço')
+plt.ylabel('Probabilidade Intrínseca')
+plt.title('Distribuição dos Maiores Pedaços')
+plt.legend()
+plt.show()
+
+# Exibir o valor médio
+print(f"Valor médio do histograma: {media_histograma}")
+print(f"O valor da probabilidade <= {x} experimental é: {probabilidade_menor_que_x}")
+print(f"Probabilidade teórica de ser <= {x} é: {1 - prob}")
