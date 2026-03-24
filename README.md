@@ -1,2 +1,2 @@
 # Undergraduate-Research-Project
-Repositório para armazenar meu trabalho de pesquisa realizado durante a iniciação científica evidenciar o efeito da partícula líder a partir da construção de um teste estatístico para divisão energética em cascatas de raios cósmicos.
+Repository containing my undergraduate research project on cosmic ray cascades. This work investigates the leading particle effect by developing statistical models and tests for energy splitting processes, combining data analysis and computational methods.
