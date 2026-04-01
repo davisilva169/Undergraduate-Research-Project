@@ -1,3 +1,5 @@
-The objective of this project is to determine well-defined statistical criteria to quantify, in the form of a statistical hypothesis test, when a given partitioning of a certain amount into several parcels offers significant statistical evidence that a lack of uniformity has occurred in the division process. This problem, apparently of an exclusively mathematical-statistical nature, is actually relevant for characterizing the validity of a simplifying physical hypothesis for the analysis of cosmic ray showers, whereby there would be asymmetry in the division of a particle's energy between its products in the initial stages. of these cascades.
+```
+The objective of this project is to determine well-defined statistical criteria to quantify, in the form of a statistical hypothesis test, when a given partitioning of a certain amount into several parcels offers significant statistical evidence that a lack of uniformity has occurred in the division process. This problem, apparently of an exclusively mathematical-statistical nature, is actually relevant for characterizing the validity of a simplifying physical hypothesis for the analysis of cosmic ray showers, whereby there would be asymmetry in the division of a particle's energy between its products in the initial stages of these cascades.
+```
 
-See more in the link: https://davisilva169.github.io/Portfolio/#/research/uniform-fragmentation
+**See more in the link:** https://davisilva169.github.io/Portfolio/#/research/uniform-fragmentation
